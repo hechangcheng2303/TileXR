@@ -26,6 +26,8 @@ public:
     FORCE_INLINE_AICORE void Init(KERNELS_ARGS_FUN())
     {
         Collectives::Init(KERNELS_ARGS_CALL());
+        inputAddr = input;
+        outputAddr = output;
         atomOp = op;
         rankSizeU32 = static_cast<uint32_t>(rankSize);
         lenPerRank = len;
@@ -63,6 +65,8 @@ private:
     int atomOp = COPYONLY;
     int64_t lenPerRank = 0;
     uint32_t rankSizeU32 = 0;
+    GM_ADDR inputAddr = nullptr;
+    GM_ADDR outputAddr = nullptr;
 
     FORCE_INLINE_AICORE int64_t LocalPublishOffset(uint32_t targetRank) const
     {
@@ -108,7 +112,7 @@ private:
         }
         GlobalTensor<T> src;
         GlobalTensor<T> dst;
-        src.SetGlobalBuffer((__gm__ T*)input + targetRank * lenPerRank, lenPerRank);
+        src.SetGlobalBuffer((__gm__ T*)inputAddr + targetRank * lenPerRank, lenPerRank);
         dst.SetGlobalBuffer((__gm__ T*)(shareAddrs[rank] + IPC_DATA_OFFSET) + LocalPublishOffset(targetRank),
             lenPerRank);
         CpGM2GM<T>(dst, src, static_cast<uint32_t>(lenPerRank), COPYONLY);
@@ -188,7 +192,7 @@ private:
         GlobalTensor<T> src;
         GlobalTensor<T> dst;
         src.SetGlobalBuffer((__gm__ T*)(shareAddrs[rank] + IPC_DATA_OFFSET) + LocalStageOffset(0), lenPerRank);
-        dst.SetGlobalBuffer((__gm__ T*)output, lenPerRank);
+        dst.SetGlobalBuffer((__gm__ T*)outputAddr, lenPerRank);
         CpGM2GM<T>(dst, src, static_cast<uint32_t>(lenPerRank), COPYONLY);
     }
 };
