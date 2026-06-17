@@ -193,6 +193,11 @@ void TestCollectivesKernelSourcesAreScoped()
     CheckDoesNotContain(reduceScatterLocalTreePath, reduceScatterLocalTree, "aiv_communication_base_v2.h");
     CheckDoesNotContain(reduceScatterLocalTreePath, reduceScatterLocalTree, "AivCommBase");
 
+    const std::string reduceScatterPath = "src/collectives/kernels/reduce_scatter.h";
+    const auto reduceScatter = ReadFile(reduceScatterPath);
+    CheckContains(reduceScatterPath, reduceScatter, "if (blockDataNum > 0) {");
+    CheckContains(reduceScatterPath, reduceScatter, "if (blockDataNum > 0 && rankIDOfBlock != rank)");
+
     const std::vector<std::string> kernelFiles = CollectFiles("src/collectives/kernels");
     CheckTrue(!kernelFiles.empty(), "expected collectives kernel files to be present");
     bool sawAllGatherCce = false;
