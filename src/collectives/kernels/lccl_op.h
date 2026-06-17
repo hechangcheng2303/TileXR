@@ -229,7 +229,11 @@ extern "C" __global__ __aicore__ void TileXRReduceScatter_##type##suffix(KERNELS
     if (root == TILEXR_REDUCE_SCATTER_ALGO_LOCAL_TREE) { \
         CLASS_OP_LAUNCH(ReduceScatterLocalTree, type); \
     } else if ((extraFlag & ExtraFlag::TOPO_PCIE) != 0) { \
-        TileXRReduceScatterBigDataWrite<type>(ALLREDUCE_ARGS_CALL(type)); \
+        if (len * sizeof(type) < SIZE_OF_8M) { \
+            CLASS_OP_LAUNCH(ReduceScatter, type); \
+        } else { \
+            TileXRReduceScatterBigDataWrite<type>(ALLREDUCE_ARGS_CALL(type)); \
+        } \
     } else if ((extraFlag & ExtraFlag::TOPO_910_93) != 0 && \
         ((rankSize > smallRankSize && rankSize % quickOneshotRankSize == 0) || isDbRing)) { \
         if (isDbRing) { \

@@ -202,10 +202,11 @@ void TestCommInternalDoesNotContainCollectiveRegistration()
     CheckFileDoesNotExist("src/comm/ccl_kernel_args.h");
 }
 
-void TestCommRecognizesAscend950Pr9599()
+void TestCommRecognizesAscend950PrVariants()
 {
     const std::string path = "src/comm/tilexr_internal.cpp";
     const auto text = ReadFile(path);
+    CheckContains(path, text, "Ascend950PR_9589");
     CheckContains(path, text, "Ascend950PR_9599");
     CheckContains(path, text, "ChipName::CHIP_950");
 
@@ -383,7 +384,7 @@ int main()
     TestBroadcastLaunchUsesByteCount();
     TestCommBuildDoesNotReferenceCollectives();
     TestCommInternalDoesNotContainCollectiveRegistration();
-    TestCommRecognizesAscend950Pr9599();
+    TestCommRecognizesAscend950PrVariants();
     TestCommBuildInstallsPublicHeadersAndKeepsLinksPrivate();
     TestCollectivesBuildDefinesSeparateSharedLibrary();
     TestRootBuildRegistersCollectivesTests();

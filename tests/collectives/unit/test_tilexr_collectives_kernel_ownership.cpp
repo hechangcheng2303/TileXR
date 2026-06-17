@@ -181,6 +181,9 @@ void TestCollectivesKernelSourcesAreScoped()
     const auto lcclOp = ReadFile(lcclOpPath);
     CheckContains(lcclOpPath, lcclOp, "#include \"reduce_scatter_local_tree.h\"");
     CheckContains(lcclOpPath, lcclOp, "CLASS_OP_LAUNCH(ReduceScatterLocalTree, type)");
+    CheckContains(lcclOpPath, lcclOp, "if (len * sizeof(type) < SIZE_OF_8M)");
+    CheckContains(lcclOpPath, lcclOp, "CLASS_OP_LAUNCH(ReduceScatter, type)");
+    CheckContains(lcclOpPath, lcclOp, "TileXRReduceScatterBigDataWrite<type>");
 
     const std::string reduceScatterLocalTreePath = "src/collectives/kernels/reduce_scatter_local_tree.h";
     const auto reduceScatterLocalTree = ReadFile(reduceScatterLocalTreePath);
