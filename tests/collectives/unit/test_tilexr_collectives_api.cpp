@@ -208,6 +208,11 @@ void TestCommRecognizesAscend950Pr9599()
     const auto text = ReadFile(path);
     CheckContains(path, text, "Ascend950PR_9599");
     CheckContains(path, text, "ChipName::CHIP_950");
+
+    const std::string commPath = "src/comm/tilexr_comm.cpp";
+    const auto comm = ReadFile(commPath);
+    CheckContains(commPath, comm, "UseSuperPodIpcAuthorization");
+    CheckContains(commPath, comm, "chipName < ChipName::CHIP_950");
 }
 
 void TestCommBuildInstallsPublicHeadersAndKeepsLinksPrivate()

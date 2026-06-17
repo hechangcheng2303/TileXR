@@ -55,6 +55,11 @@ static bool g_udmaUnavailable = false;
 static std::mutex g_sdmaMtx;
 static bool g_sdmaUnavailable = false;
 
+bool UseSuperPodIpcAuthorization(ChipName chipName)
+{
+    return chipName >= ChipName::CHIP_910_9391 && chipName < ChipName::CHIP_950;
+}
+
 
 // 如果是互联的链路，返回false； 对910B2C那些不互联的链路，返回true
 bool SkipUnusedChannel910B2C(int curRank, int peerRank, ChipName chipName)
@@ -781,7 +786,7 @@ int TileXRComm::GetSidId(int64_t sdids[TILEXR_MAX_RANK_SIZE], int rankSize)
         TILEXR_LOG(ERROR) << "TileXRComm::GetSidId err rank_ >= rankSize " << rank_ << ">=" << rankSize;
         return TILEXR_ERROR_INTERNAL;
     }
-    if ((physicalInfo_.chipName >= ChipName::CHIP_910_9391) && (physicalInfo_.chipName < ChipName::RESERVED)) {
+    if (UseSuperPodIpcAuthorization(physicalInfo_.chipName)) {
         const int rtModuleTypeSystem = 0;
         const int infoTypeSdid = 26;
         if (rtGetDeviceInfo(devList_[rank_], rtModuleTypeSystem, infoTypeSdid, &sdids[rank_]) != RT_ERROR_NONE) {
@@ -914,7 +919,7 @@ int TileXRComm::SetIpcPidSdid(string &name, const uint32_t *pids, const int64_t 
             continue;
         }
 
-        if (physicalInfo_.chipName == ChipName::RESERVED || physicalInfo_.chipName < ChipName::CHIP_910_9391) {
+        if (!UseSuperPodIpcAuthorization(physicalInfo_.chipName)) {
             // 910B
             int32_t pidInt32 = pids[i];
             int rtRet = rtSetIpcMemPid(name.c_str(), &pidInt32, HCCL_IPC_PID_ARRAY_SIZE);
