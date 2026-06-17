@@ -35,6 +35,7 @@ const std::unordered_map<std::string, ChipName> CHIP_MAP = {
     {"Ascend910_9382", ChipName::CHIP_910_9382},
     {"Ascend910_9372", ChipName::CHIP_910_9372},
     {"Ascend910_9361", ChipName::CHIP_910_9361},
+    {"Ascend910_9362", ChipName::CHIP_910_9362},
     {"Ascend950", ChipName::CHIP_950},
     {"Ascend950DT", ChipName::CHIP_950},
     {"Ascend950DT_9581", ChipName::CHIP_950},
@@ -66,8 +67,8 @@ ChipName GetChipName()
     if (it != CHIP_MAP.end()) {
         curChipName = it->second;
     } else {
-        TILEXR_LOG(WARN) << "There is no commitment to the supported chip types yet," <<
-                      " and it is not certain whether the functions will work properly.";
+        TILEXR_LOG(WARN) << "There is no commitment to the supported chip type " << chipName <<
+                      " yet, and it is not certain whether the functions will work properly.";
     }
     return curChipName;
 }
@@ -89,6 +90,7 @@ uint32_t GetCoreNum(ChipName chipName)
         case ChipName::CHIP_910B41:
         case ChipName::CHIP_910_9372:
         case ChipName::CHIP_910_9361:
+        case ChipName::CHIP_910_9362:
         case ChipName::CHIP_910A5:
             return AI_CORE_NUM_20;
         case ChipName::CHIP_310P3:

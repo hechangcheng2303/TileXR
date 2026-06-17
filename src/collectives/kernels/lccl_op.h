@@ -22,6 +22,7 @@
 #include "91093/allreduce_big_data_sio.h"
 #include "91093/allreduce_hierarchy_double_ring.h"
 #include "reduce_scatter.h"
+#include "reduce_scatter_local_tree.h"
 #include "91093/reduce_scatter_big_data_91093_4step.h"
 #include "91093/reduce_scatter_hierarchy_double_ring.h"
 #include "91093/all2all_hierarchy.h"
@@ -225,7 +226,9 @@ extern "C" __global__ __aicore__ void TileXRReduceScatter_##type##suffix(KERNELS
         len * sizeof(type) * smallRankSize <= a3BigDataSize); \
     __gm__ type * shareAddrs[TILEXR_MAX_RANK_SIZE]; \
     GET_IPC_MEM_ARGS(type); \
-    if ((extraFlag & ExtraFlag::TOPO_PCIE) != 0) { \
+    if (root == TILEXR_REDUCE_SCATTER_ALGO_LOCAL_TREE) { \
+        CLASS_OP_LAUNCH(ReduceScatterLocalTree, type); \
+    } else if ((extraFlag & ExtraFlag::TOPO_PCIE) != 0) { \
         TileXRReduceScatterBigDataWrite<type>(ALLREDUCE_ARGS_CALL(type)); \
     } else if ((extraFlag & ExtraFlag::TOPO_910_93) != 0 && \
         ((rankSize > smallRankSize && rankSize % quickOneshotRankSize == 0) || isDbRing)) { \

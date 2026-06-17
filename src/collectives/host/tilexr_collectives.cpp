@@ -7,7 +7,9 @@
  * INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE.
  * See LICENSE in the root of the software repository for the full text of the License.
  */
+#include <cstdlib>
 #include <limits>
+#include <string>
 
 #include "acl/acl_rt.h"
 #include "collective_kernel.h"
@@ -16,6 +18,8 @@
 #include "tilexr_collectives.h"
 
 namespace {
+
+constexpr int kReduceScatterLocalTreeAlgo = 1;
 
 int ValidateCommon(void *sendBuf, void *recvBuf, int64_t sendCount,
                    TileXR::TileXRDataType dataType, TileXRCommPtr comm)
@@ -63,6 +67,31 @@ int LoopbackCopy(void *sendBuf, void *recvBuf, int64_t bytes, aclrtStream stream
     const aclError ret = aclrtMemcpyAsync(recvBuf, static_cast<size_t>(bytes), sendBuf, static_cast<size_t>(bytes),
         ACL_MEMCPY_DEVICE_TO_DEVICE, stream);
     return ret == ACL_SUCCESS ? TileXR::TILEXR_SUCCESS : TileXR::TILEXR_ERROR_INTERNAL;
+}
+
+bool EnvEnabled(const char *name)
+{
+    const char *value = std::getenv(name);
+    if (value == nullptr) {
+        return false;
+    }
+    const std::string text(value);
+    return text == "1" || text == "true" || text == "TRUE" || text == "on" || text == "ON";
+}
+
+bool CanUseReduceScatterLocalTree(const TileXR::CommArgs &args, int64_t bytesPerRank)
+{
+    if (!EnvEnabled("TILEXR_REDUCE_SCATTER_LOCAL_TREE")) {
+        return false;
+    }
+    if (args.rankSize <= 1 || bytesPerRank <= 0) {
+        return false;
+    }
+    if ((args.extraFlag & (TileXR::ExtraFlag::TOPO_PCIE | TileXR::ExtraFlag::TOPO_910_93)) != 0) {
+        return false;
+    }
+    const int64_t workspaceFactor = 2 * static_cast<int64_t>(args.rankSize);
+    return workspaceFactor > 0 && bytesPerRank <= TileXR::IPC_BUFF_MAX_SIZE / workspaceFactor;
 }
 
 } // namespace
@@ -188,10 +217,13 @@ int TileXRReduceScatter(void *sendBuf, void *recvBuf, int64_t recvCount,
         return TileXR::TILEXR_ERROR_PARA_CHECK_FAIL;
     }
 
-    const uint32_t blockDim = TileXRCollectives::Host::GetReduceScatterBlockNum(*context.hostArgs, bytes);
+    const bool useLocalTree = CanUseReduceScatterLocalTree(*context.hostArgs, bytes);
+    const uint32_t blockDim = useLocalTree ? static_cast<uint32_t>(rankSize) :
+        TileXRCollectives::Host::GetReduceScatterBlockNum(*context.hostArgs, bytes);
     return TileXRCollectives::Host::LaunchCollectiveKernel(comm, TileXR::TileXRType::REDUCE_SCATTER, context,
         sendBuf, recvBuf, recvCount, dataType, blockDim, stream,
-        TileXRCollectives::Host::CollectiveLaunchAttrs { static_cast<int>(op), 0 });
+        TileXRCollectives::Host::CollectiveLaunchAttrs { static_cast<int>(op),
+            useLocalTree ? kReduceScatterLocalTreeAlgo : 0 });
 }
 
 int TileXRBroadcast(void *buf, int64_t count,

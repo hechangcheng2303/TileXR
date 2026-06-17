@@ -127,6 +127,18 @@ void TestCollectivesHostUsesOnlyPublicCommExtensionApi()
     CheckContains(kernelPath, ReadFile(kernelPath), "TileXRCommNextMagic");
 }
 
+void TestReduceScatterLocalTreeIsOptIn()
+{
+    const std::string hostPath = "src/collectives/host/tilexr_collectives.cpp";
+    const auto host = ReadFile(hostPath);
+    CheckContains(hostPath, host, "TILEXR_REDUCE_SCATTER_LOCAL_TREE");
+    CheckContains(hostPath, host, "kReduceScatterLocalTreeAlgo");
+    CheckContains(hostPath, host, "CanUseReduceScatterLocalTree");
+    CheckContains(hostPath, host, "TileXR::ExtraFlag::TOPO_PCIE | TileXR::ExtraFlag::TOPO_910_93");
+    CheckContains(hostPath, host, "TileXR::IPC_BUFF_MAX_SIZE");
+    CheckContains(hostPath, host, "useLocalTree ? static_cast<uint32_t>(rankSize)");
+}
+
 void TestCollectivesHostOwnsCollectiveLaunchHelpers()
 {
     const std::string utilsHeaderPath = "src/collectives/host/collective_utils.h";
@@ -353,6 +365,7 @@ int main()
     TestCollectivesHeaderDeclaresPublicApis();
     TestCoreApiHeaderDoesNotDeclareCollectives();
     TestCollectivesHostUsesOnlyPublicCommExtensionApi();
+    TestReduceScatterLocalTreeIsOptIn();
     TestCollectivesHostOwnsCollectiveLaunchHelpers();
     TestBroadcastLaunchUsesByteCount();
     TestCommBuildDoesNotReferenceCollectives();

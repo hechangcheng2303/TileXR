@@ -177,6 +177,22 @@ void TestCollectivesKernelSourcesAreScoped()
     CheckContains(perfTraceLayoutPath, perfTraceLayout, "__CCE_IS_AICORE__");
     CheckContains(perfTraceLayoutPath, perfTraceLayout, "!defined(__CCE__) || !defined(__CCE_IS_AICORE__)");
 
+    const std::string lcclOpPath = "src/collectives/kernels/lccl_op.h";
+    const auto lcclOp = ReadFile(lcclOpPath);
+    CheckContains(lcclOpPath, lcclOp, "#include \"reduce_scatter_local_tree.h\"");
+    CheckContains(lcclOpPath, lcclOp, "CLASS_OP_LAUNCH(ReduceScatterLocalTree, type)");
+
+    const std::string reduceScatterLocalTreePath = "src/collectives/kernels/reduce_scatter_local_tree.h";
+    const auto reduceScatterLocalTree = ReadFile(reduceScatterLocalTreePath);
+    CheckContains(reduceScatterLocalTreePath, reduceScatterLocalTree, "class ReduceScatterLocalTree");
+    CheckContains(reduceScatterLocalTreePath, reduceScatterLocalTree, "TILEXR_REDUCE_SCATTER_ALGO_LOCAL_TREE");
+    CheckContains(reduceScatterLocalTreePath, reduceScatterLocalTree, "IPC_DATA_OFFSET");
+    CheckContains(reduceScatterLocalTreePath, reduceScatterLocalTree, "SyncAll<true>()");
+    CheckContains(reduceScatterLocalTreePath, reduceScatterLocalTree, "sync.SetSyncFlag");
+    CheckContains(reduceScatterLocalTreePath, reduceScatterLocalTree, "sync.WaitSyncFlag");
+    CheckDoesNotContain(reduceScatterLocalTreePath, reduceScatterLocalTree, "aiv_communication_base_v2.h");
+    CheckDoesNotContain(reduceScatterLocalTreePath, reduceScatterLocalTree, "AivCommBase");
+
     const std::vector<std::string> kernelFiles = CollectFiles("src/collectives/kernels");
     CheckTrue(!kernelFiles.empty(), "expected collectives kernel files to be present");
     bool sawAllGatherCce = false;
