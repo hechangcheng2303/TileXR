@@ -22,7 +22,6 @@
 #include "91093/allreduce_big_data_sio.h"
 #include "91093/allreduce_hierarchy_double_ring.h"
 #include "reduce_scatter.h"
-#include "reduce_scatter_local_tree.h"
 #include "91093/reduce_scatter_big_data_91093_4step.h"
 #include "91093/reduce_scatter_hierarchy_double_ring.h"
 #include "91093/all2all_hierarchy.h"
@@ -216,14 +215,6 @@ extern "C" __global__ __aicore__ void TileXRAll2All_##type##suffix(KERNELS_ARGS_
 extern "C" __global__ __aicore__ void TileXRReduceScatter_##type##suffix(KERNELS_ARGS_FUN()) { \
     if ASCEND_IS_AIV { \
     GET_COMM_ARGS; \
-    constexpr int32_t quickOneshotRankSize = 2; \
-    constexpr int32_t cceSmallDataSize = 2 * 1024 * 1024; \
-    constexpr int32_t a3BigDataSize = 32 * 1024 * 1024; \
-    constexpr int32_t a3SupportRankSize = 4; \
-    constexpr int32_t smallRankSize = 8; \
-    const bool isDbRing = (rankSize == a3SupportRankSize || rankSize == smallRankSize) && \
-        (len * sizeof(type) * smallRankSize > cceSmallDataSize && \
-        len * sizeof(type) * smallRankSize <= a3BigDataSize); \
     __gm__ type * shareAddrs[TILEXR_MAX_RANK_SIZE]; \
     GET_IPC_MEM_ARGS(type); \
     CLASS_OP_LAUNCH(ReduceScatter, type); \
