@@ -179,7 +179,9 @@ void TestCollectivesKernelSourcesAreScoped()
 
     const std::string lcclOpPath = "src/collectives/kernels/lccl_op.h";
     const auto lcclOp = ReadFile(lcclOpPath);
-    CheckContains(lcclOpPath, lcclOp, "CLASS_OP_LAUNCH(ReduceScatter, type)");
+    CheckContains(lcclOpPath, lcclOp, "extern \"C\" __global__ __aicore__ void TileXRReduceScatter_##type##suffix");
+    CheckContains(lcclOpPath, lcclOp, "return; \\");
+    CheckDoesNotContain(lcclOpPath, lcclOp, "CLASS_OP_LAUNCH(ReduceScatter, type)");
     CheckDoesNotContain(lcclOpPath, lcclOp, "reduce_scatter_local_tree.h");
     CheckDoesNotContain(lcclOpPath, lcclOp, "ReduceScatterLocalTree");
 

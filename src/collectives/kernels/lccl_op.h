@@ -214,10 +214,7 @@ extern "C" __global__ __aicore__ void TileXRAll2All_##type##suffix(KERNELS_ARGS_
 #define LCCL_REDUCE_SCATTER_FUNC_AUTO_DEF(type, suffix) \
 extern "C" __global__ __aicore__ void TileXRReduceScatter_##type##suffix(KERNELS_ARGS_FUN()) { \
     if ASCEND_IS_AIV { \
-    GET_COMM_ARGS; \
-    __gm__ type * shareAddrs[TILEXR_MAX_RANK_SIZE]; \
-    GET_IPC_MEM_ARGS(type); \
-    CLASS_OP_LAUNCH(ReduceScatter, type); \
+    return; \
     } \
 }
 
