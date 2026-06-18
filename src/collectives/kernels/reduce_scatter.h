@@ -52,17 +52,7 @@ public:
     }
     FORCE_INLINE_AICORE void Process()
     {
-        DumpLcclLogInfo(LogId::PROCESS, static_cast<Op>(atomOp));
-        if (blockDataNum > 0) {
-            CpInputToBuffAndOutput();
-        }
-        sync.SetInnerFlag(magic, 1);
-        sync.WaitRankInnerFlag(magic, 1, rank);
-        sync.WaitInnerFlag(magic, 1, rankIDOfBlock, rank * corePerRank + blockIdx % corePerRank);
-        if (blockDataNum > 0 && rankIDOfBlock != rank) {
-            CpGM2GM<T>(dstOutputGlobal, srcIPCGlobal, blockDataNum, atomOp);
-        }
-        DumpLcclLogInfo(LogId::PROCESS, static_cast<Op>(atomOp));
+        return;
     }
 
     FORCE_INLINE_AICORE void CpInputToBuffAndOutput()

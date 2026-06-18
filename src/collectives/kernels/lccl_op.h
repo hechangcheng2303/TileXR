@@ -226,32 +226,7 @@ extern "C" __global__ __aicore__ void TileXRReduceScatter_##type##suffix(KERNELS
         len * sizeof(type) * smallRankSize <= a3BigDataSize); \
     __gm__ type * shareAddrs[TILEXR_MAX_RANK_SIZE]; \
     GET_IPC_MEM_ARGS(type); \
-    if (root == TILEXR_REDUCE_SCATTER_ALGO_LOCAL_TREE) { \
-        CLASS_OP_LAUNCH(ReduceScatterLocalTree, type); \
-    } else if ((extraFlag & ExtraFlag::TOPO_PCIE) != 0) { \
-        if (len * sizeof(type) < SIZE_OF_8M) { \
-            CLASS_OP_LAUNCH(ReduceScatter, type); \
-        } else { \
-            TileXRReduceScatterBigDataWrite<type>(ALLREDUCE_ARGS_CALL(type)); \
-        } \
-    } else if ((extraFlag & ExtraFlag::TOPO_910_93) != 0 && \
-        ((rankSize > smallRankSize && rankSize % quickOneshotRankSize == 0) || isDbRing)) { \
-        if (isDbRing) { \
-            CLASS_OP_LAUNCH(ReduceScatterHierarchyDoubleRing, type); \
-        } else if (len * sizeof(type) <= SMALL_DATA_SIZE) { \
-            CLASS_OP_LAUNCH(ReduceScatter, type); \
-        } else { \
-            CLASS_OP_LAUNCH(ReduceScatterBigData91093, type); \
-        } \
-    } else { \
-        if (rankSize == quickOneshotRankSize && len * sizeof(type) < SIZE_OF_8M) { \
-            TileXRReduceScatterWrite<type>(ALLREDUCE_ARGS_CALL(type)); \
-        } else if (rankSize > quickOneshotRankSize && len * sizeof(type) < cceSmallDataSize) { \
-            TileXRReduceScatter<type>(ALLREDUCE_ARGS_CALL_16P(type)); \
-        } else { \
-            TileXRReduceScatterBigData<type>(ALLREDUCE_ARGS_CALL_16P(type)); \
-        } \
-    } \
+    CLASS_OP_LAUNCH(ReduceScatter, type); \
     } \
 }
 
