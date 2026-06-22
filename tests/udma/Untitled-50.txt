@@ -1,0 +1,408 @@
+root@huawei:~# conda activate pt311
+(pt311) root@huawei:~# export https_proxy=http://p_atlas:proxy%40123@172.19.152.237:8080
+(pt311) root@huawei:~# rm -rf /home/h30059441/TileXR/run/plog
+(pt311) root@huawei:~# unset LD_LIBRARY_PATH
+source /home/h30059441/Ascend/cann/set_env.sh
+export RANK_TABLE_FILE=/mnt/hccl/ranktable.json
+export HCCL_TOPO_FILE_PATH=/mnt/hccl/topo.json
+export ASCEND_GLOBAL_LOG_LEVEL=0
+export ASCEND_HOST_LOG_FILE_NUM=1000
+export ASCEND_SLOG_PRINT_TO_STDOUT=0
+export HCCL_CONNECT_TIMEOUT=120
+export HCCL_EXEC_TIMEOUT=18
+export HCCL_BUFFSIZE=2048
+
+export LD_LIBRARY_PATH=/home/hjh/mpich/lib/:$LD_LIBRARY_PATH
+export PATH=/home/hjh/mpich/bin:$PATH
+
+cd /home/h30059441/TileXR
+source scripts/common_env.sh
+mkdir -p $ASCEND_PROCESS_LOG_PATH
+echo $ASCEND_PROCESS_LOG_PATH
+
+rm -rf build
+/home/h30059441/TileXR/run/plog/2606181040
+(pt311) root@huawei:/home/h30059441/TileXR# cmake -S . -B build -DCMAKE_INSTALL_PREFIX=$PWD/install
+cmake --build build --target tile-comm -j"$(nproc)"
+cmake --install build
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+== ASCEND_HOME_PATH: /home/h30059441/Ascend/cann-9.1.0
+== ASCEND_DRIVER_PATH: /usr/local/Ascend/driver
+-- Looking for C++ include pto/npu/comm/async/sdma/sdma_workspace_manager.hpp
+-- Looking for C++ include pto/npu/comm/async/sdma/sdma_workspace_manager.hpp - not found
+-- Performing Test TILEXR_HAVE_PTO_SDMA_WORKSPACE_API
+-- Performing Test TILEXR_HAVE_PTO_SDMA_WORKSPACE_API - Failed
+-- TILEXR_HAVE_PTO_SDMA: OFF
+-- Configuring done (0.6s)
+-- Generating done (0.1s)
+-- Build files have been written to: /home/h30059441/TileXR/build
+[ 11%] Building CXX object src/comm/CMakeFiles/tile-comm.dir/comm_wrap.cpp.o
+[ 22%] Building CXX object src/comm/CMakeFiles/tile-comm.dir/tilexr_comm.cpp.o
+[ 33%] Building CXX object src/comm/CMakeFiles/tile-comm.dir/tools/socket/tilexr_sock_exchange.cpp.o
+[ 44%] Building CXX object src/comm/CMakeFiles/tile-comm.dir/tilexr_internal.cpp.o
+[ 55%] Building CXX object src/comm/CMakeFiles/tile-comm.dir/udma/tilexr_hccp_loader.cpp.o
+[ 66%] Building CXX object src/comm/CMakeFiles/tile-comm.dir/udma/tilexr_udma_layout.cpp.o
+[ 77%] Building CXX object src/comm/CMakeFiles/tile-comm.dir/sdma/tilexr_sdma_transport.cpp.o
+[ 88%] Building CXX object src/comm/CMakeFiles/tile-comm.dir/udma/tilexr_udma_transport.cpp.o
+[100%] Linking CXX shared library libtile-comm.so
+[100%] Built target tile-comm
+-- Install configuration: ""
+-- Installing: /home/h30059441/TileXR/install/lib/libtile-comm.so
+-- Set non-toolchain portion of runtime path of "/home/h30059441/TileXR/install/lib/libtile-comm.so" to ""
+-- Installing: /home/h30059441/TileXR/install/include/tilexr_sdma_config.h
+-- Up-to-date: /home/h30059441/TileXR/install/include/tilexr_api.h
+-- Up-to-date: /home/h30059441/TileXR/install/include/tilexr_types.h
+-- Up-to-date: /home/h30059441/TileXR/install/include/comm_args.h
+-- Up-to-date: /home/h30059441/TileXR/install/include/tilexr_sync.h
+-- Up-to-date: /home/h30059441/TileXR/install/include/tilexr_perf_trace.h
+-- Up-to-date: /home/h30059441/TileXR/install/include/tilexr_udma.h
+-- Up-to-date: /home/h30059441/TileXR/install/include/tilexr_udma_reg.h
+-- Up-to-date: /home/h30059441/TileXR/install/include/tilexr_udma_types.h
+-- Up-to-date: /home/h30059441/TileXR/install/include/tilexr_sdma_types.h
+-- Up-to-date: /home/h30059441/TileXR/install/include/tilexr_sdma.h
+-- Up-to-date: /home/h30059441/TileXR/install/include/tilexr_sdma_compat.h
+(pt311) root@huawei:/home/h30059441/TileXR# cd /home/h30059441/TileXR/tests/udma
+rm -rf build install logs
+bash build.sh
+export LD_LIBRARY_PATH="/home/h30059441/TileXR/tests/udma/install/lib:/home/h30059441/TileXR/install/lib:/home/h30059441/TileXR/build/src/comm:${LD_LIBRARY_PATH}"
+==========================================
+  Building UDMA Tests
+==========================================
+-- The C compiler identification is GNU 13.3.0
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- ASCEND_HOME_PATH: /home/h30059441/Ascend/cann-9.1.0
+-- ARCH: x86_64
+-- TILEXR_ROOT: /home/h30059441/TileXR/tests/udma/../..
+-- Found tile-comm: /home/h30059441/TileXR/install/lib/libtile-comm.so
+-- TileXR UDMA demo enabled with /home/h30059441/Ascend/cann-9.1.0/bin/bisheng, SOC=Ascend950
+-- Configuring done (0.8s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/h30059441/TileXR/tests/udma/build
+[ 10%] Building CXX object CMakeFiles/test_tilexr_udma_registry.dir/unit/test_tilexr_udma_registry.cpp.o
+[ 30%] Building CXX object CMakeFiles/test_tilexr_udma_transport_layout.dir/unit/test_tilexr_udma_transport_layout.cpp.o
+[ 30%] Building CXX object CMakeFiles/test_tilexr_udma_transport_layout.dir/home/h30059441/TileXR/src/comm/udma/tilexr_udma_layout.cpp.o
+[ 50%] Building TileXR UDMA demo kernel with bisheng
+[ 50%] Building CXX object CMakeFiles/test_tilexr_udma.dir/integration/test_tilexr_udma.cpp.o
+[ 60%] Linking CXX executable test_tilexr_udma_registry
+[ 60%] Built target test_tilexr_udma_registry
+[ 70%] Linking CXX executable test_tilexr_udma
+[ 80%] Linking CXX executable test_tilexr_udma_transport_layout
+[ 80%] Built target test_tilexr_udma_transport_layout
+[ 80%] Built target test_tilexr_udma
+[ 80%] Built target tilexr_udma_demo_kernel
+[ 90%] Building CXX object CMakeFiles/tilexr_udma_demo.dir/demo/tilexr_udma_demo.cpp.o
+[100%] Linking CXX executable tilexr_udma_demo
+[100%] Built target tilexr_udma_demo
+[ 20%] Built target test_tilexr_udma_registry
+[ 50%] Built target test_tilexr_udma_transport_layout
+[ 70%] Built target test_tilexr_udma
+[ 80%] Built target tilexr_udma_demo_kernel
+[100%] Built target tilexr_udma_demo
+Install the project...
+-- Install configuration: ""
+-- Installing: /home/h30059441/TileXR/tests/udma/install/lib/libtilexr_udma_demo_kernel.so
+-- Installing: /home/h30059441/TileXR/tests/udma/install/bin/test_tilexr_udma
+-- Set non-toolchain portion of runtime path of "/home/h30059441/TileXR/tests/udma/install/bin/test_tilexr_udma" to ""
+-- Installing: /home/h30059441/TileXR/tests/udma/install/bin/test_tilexr_udma_registry
+-- Installing: /home/h30059441/TileXR/tests/udma/install/bin/test_tilexr_udma_transport_layout
+-- Installing: /home/h30059441/TileXR/tests/udma/install/bin/tilexr_udma_demo
+-- Set non-toolchain portion of runtime path of "/home/h30059441/TileXR/tests/udma/install/bin/tilexr_udma_demo" to ""
+
+==========================================
+  Build Complete
+==========================================
+Test binaries installed to: /home/h30059441/TileXR/tests/udma/install/bin
+
+Available tests:
+  - test_tilexr_udma_transport_layout : UDMA info layout unit tests
+  - test_tilexr_udma_registry : registered-memory metadata unit tests
+  - test_tilexr_udma     : TileXR integration tests
+  - tilexr_udma_demo     : TileXR UDMA communication demo
+
+Run tests with:
+  bash run_tests.sh
+Run demo with:
+  bash demo/run_tilexr_udma_demo.sh 0 2 16
+==========================================
+(pt311) root@huawei:/home/h30059441/TileXR/tests/udma# bash demo/run_tilexr_udma_demo.sh 0 2 16 2 0
+==========================================
+  TileXR UDMA Communication Demo
+==========================================
+Binary:            /home/h30059441/TileXR/tests/udma/install/bin/tilexr_udma_demo
+Test type:         0 (0=all-gather put, 1=put-signal)
+Rank size:         2
+Elements/rank:     16
+NPU count:         2
+First NPU:         0
+TILEXR_DEMO_DEVICES: 
+TILEXR_COMM_ID:    127.0.0.1:10067
+Log dir:           /home/h30059441/TileXR/tests/udma/logs/tilexr_udma_demo_20260618_104123
+==========================================
+Starting rank 0, log=/home/h30059441/TileXR/tests/udma/logs/tilexr_udma_demo_20260618_104123/rank_0.log
+Starting rank 1, log=/home/h30059441/TileXR/tests/udma/logs/tilexr_udma_demo_20260618_104123/rank_1.log
+rank 0 failed with exit code 1
+rank 1 failed with exit code 1
+==========================================
+  Rank Log Tails
+==========================================
+----- rank 0: /home/h30059441/TileXR/tests/udma/logs/tilexr_udma_demo_20260618_104123/rank_0.log -----
+========================================
+  TileXR UDMA Communication Demo
+========================================
+[rank 0] argv: rankSize=2 rank=0 testType=0 elementsPerRank=16 npuCount=2 firstNpu=0
+[rank 0] PID=68882 TILEXR_COMM_ID=127.0.0.1:10067 LD_LIBRARY_PATH=/home/h30059441/TileXR/tests/udma/install/lib:/home/h30059441/TileXR/install/lib:/usr/local/lib:/home/h30059441/TileXR/env/util/mpich/lib:/usr/local/Ascend/driver/lib64/driver:/usr/local/Ascend/driver/lib64/common:/usr/local/Ascend/driver/lib64:/home/h30059441/Ascend/cann-9.1.0/x86_64-linux/lib64:/home/h30059441/TileXR/tests/udma/install/lib:/home/h30059441/TileXR/install/lib:/home/h30059441/TileXR/build/src/comm:/home/h30059441/TileXR/env/util/mpich/lib:/usr/local/Ascend/driver/lib64/driver:/usr/local/Ascend/driver/lib64/common:/usr/local/Ascend/driver/lib64:/home/h30059441/Ascend/cann-9.1.0/x86_64-linux/lib64:/home/hjh/mpich/lib/:/home/h30059441/Ascend/cann-9.1.0/lib64:/home/h30059441/Ascend/cann-9.1.0/lib64/plugin/opskernel:/home/h30059441/Ascend/cann-9.1.0/lib64/plugin/nnengine:/home/h30059441/Ascend/cann-9.1.0/opp/built-in/op_impl/ai_core/tbe/op_tiling/lib/linux/x86_64:/usr/local/Ascend/driver/lib64:/usr/local/Ascend/driver/lib64/common:/usr/local/Ascend/driver/lib64/driver
+[rank 0] aclInit success
+[rank 0] aclrtSetDevice(0) success
+[rank 0] aclrtCreateStream success
+INFO comm_wrap.cpp:26 using tilexr c++ api! rank0
+INFO tilexr_sock_exchange.cpp:204 The server is listening! ip: 127.0.0.1 port: 10067
+INFO tilexr_comm.cpp:709 AllGather: Get other rank dev id success
+INFO tilexr_comm.cpp:515 rank 0/2 running devId:0
+INFO tilexr_comm.cpp:173 InitUDMA success, rank 0/2
+INFO tilexr_sdma_transport.cpp:53 TileXR SDMA disabled; set TILEXR_ENABLE_SDMA=1 to enable
+INFO tilexr_comm.cpp:546 TileXRCommInit 0/2 success. extraFlag:67140 commArgs_.localRank : 0 commArgs_.localRankSize : 2
+[rank 0] TileXRCommInitRankLocal success
+[rank 0] TileXRGetCommArgsHost success
+[rank 0] TileXRGetCommArgsDev success
+[rank 0] CommArgs host fields:
+  commArgsDev=0x12000001f000
+  rank=0 rankSize=2 localRank=0 localRankSize=2
+  extraFlag=0x10644 UDMA=enabled
+  udmaInfoPtr=0x12000001e000 udmaRegistryPtr=0 dumpAddr=0
+  peerMems[0]=0x12004c600000
+  peerMems[1]=0x124000000000
+[rank 0] aclrtMalloc debug success
+[rank 0] aclrtMalloc registered memory success
+ERROR tilexr_comm.cpp:350 TileXR UDMA memory registration failed: -4
+[rank 0] ERROR: TileXRUDMARegister failed, ret=-4
+[rank 0] aclrtFree registered memory
+[rank 0] aclrtFree debug
+[rank 0] TileXRCommDestroy success
+[rank 0] aclrtDestroyStream success
+[rank 0] aclrtResetDevice success
+[rank 0] aclFinalize success
+----- rank 1: /home/h30059441/TileXR/tests/udma/logs/tilexr_udma_demo_20260618_104123/rank_1.log -----
+========================================
+  TileXR UDMA Communication Demo
+========================================
+[rank 1] argv: rankSize=2 rank=1 testType=0 elementsPerRank=16 npuCount=2 firstNpu=0
+[rank 1] PID=68883 TILEXR_COMM_ID=127.0.0.1:10067 LD_LIBRARY_PATH=/home/h30059441/TileXR/tests/udma/install/lib:/home/h30059441/TileXR/install/lib:/usr/local/lib:/home/h30059441/TileXR/env/util/mpich/lib:/usr/local/Ascend/driver/lib64/driver:/usr/local/Ascend/driver/lib64/common:/usr/local/Ascend/driver/lib64:/home/h30059441/Ascend/cann-9.1.0/x86_64-linux/lib64:/home/h30059441/TileXR/tests/udma/install/lib:/home/h30059441/TileXR/install/lib:/home/h30059441/TileXR/build/src/comm:/home/h30059441/TileXR/env/util/mpich/lib:/usr/local/Ascend/driver/lib64/driver:/usr/local/Ascend/driver/lib64/common:/usr/local/Ascend/driver/lib64:/home/h30059441/Ascend/cann-9.1.0/x86_64-linux/lib64:/home/hjh/mpich/lib/:/home/h30059441/Ascend/cann-9.1.0/lib64:/home/h30059441/Ascend/cann-9.1.0/lib64/plugin/opskernel:/home/h30059441/Ascend/cann-9.1.0/lib64/plugin/nnengine:/home/h30059441/Ascend/cann-9.1.0/opp/built-in/op_impl/ai_core/tbe/op_tiling/lib/linux/x86_64:/usr/local/Ascend/driver/lib64:/usr/local/Ascend/driver/lib64/common:/usr/local/Ascend/driver/lib64/driver
+[rank 1] aclInit success
+[rank 1] aclrtSetDevice(1) success
+[rank 1] aclrtCreateStream success
+INFO comm_wrap.cpp:26 using tilexr c++ api! rank1
+INFO tilexr_comm.cpp:709 AllGather: Get other rank dev id success
+INFO tilexr_comm.cpp:515 rank 1/2 running devId:1
+INFO tilexr_comm.cpp:173 InitUDMA success, rank 1/2
+INFO tilexr_sdma_transport.cpp:53 TileXR SDMA disabled; set TILEXR_ENABLE_SDMA=1 to enable
+INFO tilexr_comm.cpp:546 TileXRCommInit 1/2 success. extraFlag:67140 commArgs_.localRank : 1 commArgs_.localRankSize : 2
+[rank 1] TileXRCommInitRankLocal success
+[rank 1] TileXRGetCommArgsHost success
+[rank 1] TileXRGetCommArgsDev success
+[rank 1] CommArgs host fields:
+  commArgsDev=0x12000001f000
+  rank=1 rankSize=2 localRank=1 localRankSize=2
+  extraFlag=0x10644 UDMA=enabled
+  udmaInfoPtr=0x12000001e000 udmaRegistryPtr=0 dumpAddr=0
+  peerMems[0]=0x124000000000
+  peerMems[1]=0x12004c600000
+[rank 1] aclrtMalloc debug success
+[rank 1] aclrtMalloc registered memory success
+ERROR tilexr_comm.cpp:350 TileXR UDMA memory registration failed: -4
+[rank 1] ERROR: TileXRUDMARegister failed, ret=-4
+[rank 1] aclrtFree registered memory
+[rank 1] aclrtFree debug
+[rank 1] TileXRCommDestroy success
+[rank 1] aclrtDestroyStream success
+[rank 1] aclrtResetDevice success
+[rank 1] aclFinalize success
+(pt311) root@huawei:/home/h30059441/TileXR/tests/udma# bash demo/run_tilexr_udma_demo.sh 1 2 16 2 0
+==========================================
+  TileXR UDMA Communication Demo
+==========================================
+Binary:            /home/h30059441/TileXR/tests/udma/install/bin/tilexr_udma_demo
+Test type:         1 (0=all-gather put, 1=put-signal)
+Rank size:         2
+Elements/rank:     16
+NPU count:         2
+First NPU:         0
+TILEXR_DEMO_DEVICES: 
+TILEXR_COMM_ID:    127.0.0.1:10067
+Log dir:           /home/h30059441/TileXR/tests/udma/logs/tilexr_udma_demo_20260618_104137
+==========================================
+Starting rank 0, log=/home/h30059441/TileXR/tests/udma/logs/tilexr_udma_demo_20260618_104137/rank_0.log
+Starting rank 1, log=/home/h30059441/TileXR/tests/udma/logs/tilexr_udma_demo_20260618_104137/rank_1.log
+rank 0 failed with exit code 1
+rank 1 failed with exit code 1
+==========================================
+  Rank Log Tails
+==========================================
+----- rank 0: /home/h30059441/TileXR/tests/udma/logs/tilexr_udma_demo_20260618_104137/rank_0.log -----
+========================================
+  TileXR UDMA Communication Demo
+========================================
+[rank 0] argv: rankSize=2 rank=0 testType=1 elementsPerRank=16 npuCount=2 firstNpu=0
+[rank 0] PID=69048 TILEXR_COMM_ID=127.0.0.1:10067 LD_LIBRARY_PATH=/home/h30059441/TileXR/tests/udma/install/lib:/home/h30059441/TileXR/install/lib:/usr/local/lib:/home/h30059441/TileXR/env/util/mpich/lib:/usr/local/Ascend/driver/lib64/driver:/usr/local/Ascend/driver/lib64/common:/usr/local/Ascend/driver/lib64:/home/h30059441/Ascend/cann-9.1.0/x86_64-linux/lib64:/home/h30059441/TileXR/tests/udma/install/lib:/home/h30059441/TileXR/install/lib:/home/h30059441/TileXR/build/src/comm:/home/h30059441/TileXR/env/util/mpich/lib:/usr/local/Ascend/driver/lib64/driver:/usr/local/Ascend/driver/lib64/common:/usr/local/Ascend/driver/lib64:/home/h30059441/Ascend/cann-9.1.0/x86_64-linux/lib64:/home/hjh/mpich/lib/:/home/h30059441/Ascend/cann-9.1.0/lib64:/home/h30059441/Ascend/cann-9.1.0/lib64/plugin/opskernel:/home/h30059441/Ascend/cann-9.1.0/lib64/plugin/nnengine:/home/h30059441/Ascend/cann-9.1.0/opp/built-in/op_impl/ai_core/tbe/op_tiling/lib/linux/x86_64:/usr/local/Ascend/driver/lib64:/usr/local/Ascend/driver/lib64/common:/usr/local/Ascend/driver/lib64/driver
+[rank 0] aclInit success
+[rank 0] aclrtSetDevice(0) success
+[rank 0] aclrtCreateStream success
+INFO comm_wrap.cpp:26 using tilexr c++ api! rank0
+INFO tilexr_sock_exchange.cpp:204 The server is listening! ip: 127.0.0.1 port: 10067
+INFO tilexr_comm.cpp:709 AllGather: Get other rank dev id success
+INFO tilexr_comm.cpp:515 rank 0/2 running devId:0
+INFO tilexr_comm.cpp:173 InitUDMA success, rank 0/2
+INFO tilexr_sdma_transport.cpp:53 TileXR SDMA disabled; set TILEXR_ENABLE_SDMA=1 to enable
+INFO tilexr_comm.cpp:546 TileXRCommInit 0/2 success. extraFlag:67140 commArgs_.localRank : 0 commArgs_.localRankSize : 2
+[rank 0] TileXRCommInitRankLocal success
+[rank 0] TileXRGetCommArgsHost success
+[rank 0] TileXRGetCommArgsDev success
+[rank 0] CommArgs host fields:
+  commArgsDev=0x12000001f000
+  rank=0 rankSize=2 localRank=0 localRankSize=2
+  extraFlag=0x10644 UDMA=enabled
+  udmaInfoPtr=0x12000001e000 udmaRegistryPtr=0 dumpAddr=0
+  peerMems[0]=0x12004c600000
+  peerMems[1]=0x124000000000
+[rank 0] aclrtMalloc debug success
+[rank 0] aclrtMalloc registered memory success
+ERROR tilexr_comm.cpp:350 TileXR UDMA memory registration failed: -4
+[rank 0] ERROR: TileXRUDMARegister failed, ret=-4
+[rank 0] aclrtFree registered memory
+[rank 0] aclrtFree debug
+[rank 0] TileXRCommDestroy success
+[rank 0] aclrtDestroyStream success
+[rank 0] aclrtResetDevice success
+[rank 0] aclFinalize success
+----- rank 1: /home/h30059441/TileXR/tests/udma/logs/tilexr_udma_demo_20260618_104137/rank_1.log -----
+========================================
+  TileXR UDMA Communication Demo
+========================================
+[rank 1] argv: rankSize=2 rank=1 testType=1 elementsPerRank=16 npuCount=2 firstNpu=0
+[rank 1] PID=69049 TILEXR_COMM_ID=127.0.0.1:10067 LD_LIBRARY_PATH=/home/h30059441/TileXR/tests/udma/install/lib:/home/h30059441/TileXR/install/lib:/usr/local/lib:/home/h30059441/TileXR/env/util/mpich/lib:/usr/local/Ascend/driver/lib64/driver:/usr/local/Ascend/driver/lib64/common:/usr/local/Ascend/driver/lib64:/home/h30059441/Ascend/cann-9.1.0/x86_64-linux/lib64:/home/h30059441/TileXR/tests/udma/install/lib:/home/h30059441/TileXR/install/lib:/home/h30059441/TileXR/build/src/comm:/home/h30059441/TileXR/env/util/mpich/lib:/usr/local/Ascend/driver/lib64/driver:/usr/local/Ascend/driver/lib64/common:/usr/local/Ascend/driver/lib64:/home/h30059441/Ascend/cann-9.1.0/x86_64-linux/lib64:/home/hjh/mpich/lib/:/home/h30059441/Ascend/cann-9.1.0/lib64:/home/h30059441/Ascend/cann-9.1.0/lib64/plugin/opskernel:/home/h30059441/Ascend/cann-9.1.0/lib64/plugin/nnengine:/home/h30059441/Ascend/cann-9.1.0/opp/built-in/op_impl/ai_core/tbe/op_tiling/lib/linux/x86_64:/usr/local/Ascend/driver/lib64:/usr/local/Ascend/driver/lib64/common:/usr/local/Ascend/driver/lib64/driver
+[rank 1] aclInit success
+[rank 1] aclrtSetDevice(1) success
+[rank 1] aclrtCreateStream success
+INFO comm_wrap.cpp:26 using tilexr c++ api! rank1
+INFO tilexr_comm.cpp:709 AllGather: Get other rank dev id success
+INFO tilexr_comm.cpp:515 rank 1/2 running devId:1
+INFO tilexr_comm.cpp:173 InitUDMA success, rank 1/2
+INFO tilexr_sdma_transport.cpp:53 TileXR SDMA disabled; set TILEXR_ENABLE_SDMA=1 to enable
+INFO tilexr_comm.cpp:546 TileXRCommInit 1/2 success. extraFlag:67140 commArgs_.localRank : 1 commArgs_.localRankSize : 2
+[rank 1] TileXRCommInitRankLocal success
+[rank 1] TileXRGetCommArgsHost success
+[rank 1] TileXRGetCommArgsDev success
+[rank 1] CommArgs host fields:
+  commArgsDev=0x12000001f000
+  rank=1 rankSize=2 localRank=1 localRankSize=2
+  extraFlag=0x10644 UDMA=enabled
+  udmaInfoPtr=0x12000001e000 udmaRegistryPtr=0 dumpAddr=0
+  peerMems[0]=0x124000000000
+  peerMems[1]=0x12004c600000
+[rank 1] aclrtMalloc debug success
+[rank 1] aclrtMalloc registered memory success
+ERROR tilexr_comm.cpp:350 TileXR UDMA memory registration failed: -4
+[rank 1] ERROR: TileXRUDMARegister failed, ret=-4
+[rank 1] aclrtFree registered memory
+[rank 1] aclrtFree debug
+[rank 1] TileXRCommDestroy success
+[rank 1] aclrtDestroyStream success
+[rank 1] aclrtResetDevice success
+[rank 1] aclFinalize success
+(pt311) root@huawei:/home/h30059441/TileXR/tests/udma# 
+(pt311) root@huawei:/home/h30059441/TileXR/tests/udma# latest_put=$(ls -td logs/tilexr_udma_demo_* | sed -n '2p')
+latest_signal=$(ls -td logs/tilexr_udma_demo_* | sed -n '1p')
+(pt311) root@huawei:/home/h30059441/TileXR/tests/udma# echo "put log: $latest_put"
+grep -R "TileXR UDMA demo success" "$latest_put"
+grep -R "TileXRUDMARegister success" "$latest_put"
+grep -R "seg0=1000.*seg1=1001" "$latest_put"
+grep -R "DATA MISMATCH\|expected non-local signals\|TileXR UDMA demo failed\|ERROR" "$latest_put"
+
+echo "signal log: $latest_signal"
+grep -R "TileXR UDMA demo success" "$latest_signal"
+grep -R "TileXRUDMARegister success" "$latest_signal"
+grep -R "signal values:" "$latest_signal"
+grep -R "DATA MISMATCH\|expected non-local signals\|TileXR UDMA demo failed\|ERROR" "$latest_signal"
+
+cd /home/h30059441/TileXR/run/plog
+grep -rn ERROR $PWD
+put log: logs/tilexr_udma_demo_20260618_104123
+logs/tilexr_udma_demo_20260618_104123/rank_0.log:ERROR tilexr_comm.cpp:350 TileXR UDMA memory registration failed: -4
+logs/tilexr_udma_demo_20260618_104123/rank_0.log:[rank 0] ERROR: TileXRUDMARegister failed, ret=-4
+logs/tilexr_udma_demo_20260618_104123/rank_1.log:ERROR tilexr_comm.cpp:350 TileXR UDMA memory registration failed: -4
+logs/tilexr_udma_demo_20260618_104123/rank_1.log:[rank 1] ERROR: TileXRUDMARegister failed, ret=-4
+signal log: logs/tilexr_udma_demo_20260618_104137
+logs/tilexr_udma_demo_20260618_104137/rank_0.log:ERROR tilexr_comm.cpp:350 TileXR UDMA memory registration failed: -4
+logs/tilexr_udma_demo_20260618_104137/rank_0.log:[rank 0] ERROR: TileXRUDMARegister failed, ret=-4
+logs/tilexr_udma_demo_20260618_104137/rank_1.log:ERROR tilexr_comm.cpp:350 TileXR UDMA memory registration failed: -4
+logs/tilexr_udma_demo_20260618_104137/rank_1.log:[rank 1] ERROR: TileXRUDMARegister failed, ret=-4
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-0/device-68882_20260618104128244.log:1:[ERROR] HCCP(32170,hccp_service.bin):2026-06-18-10:41:24.745.823 [rs_ub.c:1177]tid:32173,RsUbInitSegCb : [init][rs_ctx_lmem]rs_urma_register_seg len[0x200000] failed, errno:2048
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-0/device-68882_20260618104128244.log:2:[ERROR] HCCP(32170,hccp_service.bin):2026-06-18-10:41:24.745.836 [rs_ub.c:1220]tid:32173,RsUbCtxLmemReg : [init][rs_ctx_lmem]rs_ub_init_seg_cb failed, ret:-259
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-0/device-68882_20260618104128244.log:3:[ERROR] HCCP(32170,hccp_service.bin):2026-06-18-10:41:24.745.844 [rs_ctx.c:364]tid:32173,RsCtxLmemReg : rs_ub_ctx_lmem_reg failed, ret:65796, devIndex:0xfffffefd
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-0/device-68882_20260618104128244.log:4:[ERROR] HCCP(32170,hccp_service.bin):2026-06-18-10:41:24.745.852 [ra_adp_ctx.c:281]tid:32173,RaRsLmemReg : [init][ra_rs_lmem]reg failed, ret[-259] phyId[0] devIndex[0x10104]
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-0/device-68882_20260618104128244.log:5:[ERROR] HCCP(32170,hccp_service.bin):2026-06-18-10:41:24.747.308 [rs_ub.c:2027]tid:32173,RsUbCtxJettyUnimport : rs_urma_unimport_jetty failed, ret:4096, remJettyId 9496
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-0/device-68882_20260618104128244.log:6:[ERROR] HCCP(32170,hccp_service.bin):2026-06-18-10:41:24.747.331 [rs_ctx.c:609]tid:32173,RsCtxQpUnimport : rs_ub_ctx_jetty_unimport failed, ret:-259 devIndex:0x10104
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-0/device-68882_20260618104128244.log:7:[ERROR] HCCP(32170,hccp_service.bin):2026-06-18-10:41:24.747.340 [ra_adp_ctx.c:532]tid:32173,RaRsCtxQpUnimport : [deinit][ra_rs_qp]unimport failed, ret[-259] phyId[0] devIndex[0x10104] rem_qp_id[9496]
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-0/device-68882_20260618104128244.log:8:[ERROR] HCCP(32170,hccp_service.bin):2026-06-18-10:41:24.752.655 [rs_ub.c:1107]tid:32173,RsUbCtxDeinit : rs_urma_delete_context failed, ret:11
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-0/device-68882_20260618104128244.log:9:[ERROR] HCCP(32170,hccp_service.bin):2026-06-18-10:41:24.752.748 [rs_ctx.c:207]tid:32173,RsCtxDeinit : rs ub ctx deinit failed, ret:11 devIndex:0x10104
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-0/device-68882_20260618104128244.log:10:[ERROR] HCCP(32170,hccp_service.bin):2026-06-18-10:41:24.752.756 [ra_adp_ctx.c:146]tid:32173,RaRsCtxDeinit : [deinit][ra_rs_ctx]deinit failed, ret[11] phyId[0] devIndex[0x10104]
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-0/device-69048_20260618104142248.log:1:[ERROR] HCCP(32245,hccp_service.bin):2026-06-18-10:41:38.538.576 [rs_ub.c:1177]tid:32248,RsUbInitSegCb : [init][rs_ctx_lmem]rs_urma_register_seg len[0x200000] failed, errno:2048
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-0/device-69048_20260618104142248.log:2:[ERROR] HCCP(32245,hccp_service.bin):2026-06-18-10:41:38.538.589 [rs_ub.c:1220]tid:32248,RsUbCtxLmemReg : [init][rs_ctx_lmem]rs_ub_init_seg_cb failed, ret:-259
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-0/device-69048_20260618104142248.log:3:[ERROR] HCCP(32245,hccp_service.bin):2026-06-18-10:41:38.538.597 [rs_ctx.c:364]tid:32248,RsCtxLmemReg : rs_ub_ctx_lmem_reg failed, ret:65796, devIndex:0xfffffefd
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-0/device-69048_20260618104142248.log:4:[ERROR] HCCP(32245,hccp_service.bin):2026-06-18-10:41:38.538.606 [ra_adp_ctx.c:281]tid:32248,RaRsLmemReg : [init][ra_rs_lmem]reg failed, ret[-259] phyId[0] devIndex[0x10104]
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-0/device-69048_20260618104142248.log:5:[ERROR] HCCP(32245,hccp_service.bin):2026-06-18-10:41:38.545.116 [rs_ub.c:2027]tid:32248,RsUbCtxJettyUnimport : rs_urma_unimport_jetty failed, ret:4096, remJettyId 9497
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-0/device-69048_20260618104142248.log:6:[ERROR] HCCP(32245,hccp_service.bin):2026-06-18-10:41:38.545.162 [rs_ctx.c:609]tid:32248,RsCtxQpUnimport : rs_ub_ctx_jetty_unimport failed, ret:-259 devIndex:0x10104
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-0/device-69048_20260618104142248.log:7:[ERROR] HCCP(32245,hccp_service.bin):2026-06-18-10:41:38.545.172 [ra_adp_ctx.c:532]tid:32248,RaRsCtxQpUnimport : [deinit][ra_rs_qp]unimport failed, ret[-259] phyId[0] devIndex[0x10104] rem_qp_id[9497]
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-0/device-69048_20260618104142248.log:8:[ERROR] HCCP(32245,hccp_service.bin):2026-06-18-10:41:38.553.736 [rs_ub.c:1107]tid:32248,RsUbCtxDeinit : rs_urma_delete_context failed, ret:11
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-0/device-69048_20260618104142248.log:9:[ERROR] HCCP(32245,hccp_service.bin):2026-06-18-10:41:38.553.856 [rs_ctx.c:207]tid:32248,RsCtxDeinit : rs ub ctx deinit failed, ret:11 devIndex:0x10104
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-0/device-69048_20260618104142248.log:10:[ERROR] HCCP(32245,hccp_service.bin):2026-06-18-10:41:38.553.865 [ra_adp_ctx.c:146]tid:32248,RaRsCtxDeinit : [deinit][ra_rs_ctx]deinit failed, ret[11] phyId[0] devIndex[0x10104]
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-1/device-69049_20260618104142065.log:1:[ERROR] HCCP(32451,hccp_service.bin):2026-06-18-10:41:38.539.136 [rs_ub.c:1177]tid:32454,RsUbInitSegCb : [init][rs_ctx_lmem]rs_urma_register_seg len[0x200000] failed, errno:2048
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-1/device-69049_20260618104142065.log:2:[ERROR] HCCP(32451,hccp_service.bin):2026-06-18-10:41:38.539.151 [rs_ub.c:1220]tid:32454,RsUbCtxLmemReg : [init][rs_ctx_lmem]rs_ub_init_seg_cb failed, ret:-259
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-1/device-69049_20260618104142065.log:3:[ERROR] HCCP(32451,hccp_service.bin):2026-06-18-10:41:38.539.158 [rs_ctx.c:364]tid:32454,RsCtxLmemReg : rs_ub_ctx_lmem_reg failed, ret:65796, devIndex:0xfffffefd
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-1/device-69049_20260618104142065.log:4:[ERROR] HCCP(32451,hccp_service.bin):2026-06-18-10:41:38.539.170 [ra_adp_ctx.c:281]tid:32454,RaRsLmemReg : [init][ra_rs_lmem]reg failed, ret[-259] phyId[1] devIndex[0x10104]
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-1/device-69049_20260618104142065.log:5:[ERROR] HCCP(32451,hccp_service.bin):2026-06-18-10:41:38.540.300 [rs_ub.c:2027]tid:32454,RsUbCtxJettyUnimport : rs_urma_unimport_jetty failed, ret:4096, remJettyId 9497
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-1/device-69049_20260618104142065.log:6:[ERROR] HCCP(32451,hccp_service.bin):2026-06-18-10:41:38.540.322 [rs_ctx.c:609]tid:32454,RsCtxQpUnimport : rs_ub_ctx_jetty_unimport failed, ret:-259 devIndex:0x10104
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-1/device-69049_20260618104142065.log:7:[ERROR] HCCP(32451,hccp_service.bin):2026-06-18-10:41:38.540.330 [ra_adp_ctx.c:532]tid:32454,RaRsCtxQpUnimport : [deinit][ra_rs_qp]unimport failed, ret[-259] phyId[1] devIndex[0x10104] rem_qp_id[9497]
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-1/device-69049_20260618104142065.log:8:[ERROR] HCCP(32451,hccp_service.bin):2026-06-18-10:41:38.545.951 [rs_ub.c:1107]tid:32454,RsUbCtxDeinit : rs_urma_delete_context failed, ret:11
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-1/device-69049_20260618104142065.log:9:[ERROR] HCCP(32451,hccp_service.bin):2026-06-18-10:41:38.546.124 [rs_ctx.c:207]tid:32454,RsCtxDeinit : rs ub ctx deinit failed, ret:11 devIndex:0x10104
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-1/device-69049_20260618104142065.log:10:[ERROR] HCCP(32451,hccp_service.bin):2026-06-18-10:41:38.546.139 [ra_adp_ctx.c:146]tid:32454,RaRsCtxDeinit : [deinit][ra_rs_ctx]deinit failed, ret[11] phyId[1] devIndex[0x10104]
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-1/device-68883_20260618104128050.log:1:[ERROR] HCCP(32375,hccp_service.bin):2026-06-18-10:41:24.746.605 [rs_ub.c:1177]tid:32378,RsUbInitSegCb : [init][rs_ctx_lmem]rs_urma_register_seg len[0x200000] failed, errno:2048
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-1/device-68883_20260618104128050.log:2:[ERROR] HCCP(32375,hccp_service.bin):2026-06-18-10:41:24.746.620 [rs_ub.c:1220]tid:32378,RsUbCtxLmemReg : [init][rs_ctx_lmem]rs_ub_init_seg_cb failed, ret:-259
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-1/device-68883_20260618104128050.log:3:[ERROR] HCCP(32375,hccp_service.bin):2026-06-18-10:41:24.746.629 [rs_ctx.c:364]tid:32378,RsCtxLmemReg : rs_ub_ctx_lmem_reg failed, ret:65796, devIndex:0xfffffefd
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-1/device-68883_20260618104128050.log:4:[ERROR] HCCP(32375,hccp_service.bin):2026-06-18-10:41:24.746.638 [ra_adp_ctx.c:281]tid:32378,RaRsLmemReg : [init][ra_rs_lmem]reg failed, ret[-259] phyId[1] devIndex[0x10104]
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-1/device-68883_20260618104128050.log:5:[ERROR] HCCP(32375,hccp_service.bin):2026-06-18-10:41:24.748.030 [rs_ub.c:2027]tid:32378,RsUbCtxJettyUnimport : rs_urma_unimport_jetty failed, ret:4096, remJettyId 9496
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-1/device-68883_20260618104128050.log:6:[ERROR] HCCP(32375,hccp_service.bin):2026-06-18-10:41:24.748.053 [rs_ctx.c:609]tid:32378,RsCtxQpUnimport : rs_ub_ctx_jetty_unimport failed, ret:-259 devIndex:0x10104
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-1/device-68883_20260618104128050.log:7:[ERROR] HCCP(32375,hccp_service.bin):2026-06-18-10:41:24.748.063 [ra_adp_ctx.c:532]tid:32378,RaRsCtxQpUnimport : [deinit][ra_rs_qp]unimport failed, ret[-259] phyId[1] devIndex[0x10104] rem_qp_id[9496]
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-1/device-68883_20260618104128050.log:8:[ERROR] HCCP(32375,hccp_service.bin):2026-06-18-10:41:24.753.752 [rs_ub.c:1107]tid:32378,RsUbCtxDeinit : rs_urma_delete_context failed, ret:11
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-1/device-68883_20260618104128050.log:9:[ERROR] HCCP(32375,hccp_service.bin):2026-06-18-10:41:24.753.907 [rs_ctx.c:207]tid:32378,RsCtxDeinit : rs ub ctx deinit failed, ret:11 devIndex:0x10104
+/home/h30059441/TileXR/run/plog/2606181041/debug/device-1/device-68883_20260618104128050.log:10:[ERROR] HCCP(32375,hccp_service.bin):2026-06-18-10:41:24.753.915 [ra_adp_ctx.c:146]tid:32378,RaRsCtxDeinit : [deinit][ra_rs_ctx]deinit failed, ret[11] phyId[1] devIndex[0x10104]
+/home/h30059441/TileXR/run/plog/2606181041/debug/plog/plog-68883_20260618104124883.log:1:[ERROR] HCCP(68883,tilexr_udma_demo):2026-06-18-10:41:24.742.906 [ra_hdc_ctx.c:276]tid:68883,RaHdcCtxLmemRegister : [init][ra_hdc_lmem]hdc message process failed ret[-259], phyId[1] devIndex[65796]
+/home/h30059441/TileXR/run/plog/2606181041/debug/plog/plog-68883_20260618104124883.log:2:[ERROR] HCCP(68883,tilexr_udma_demo):2026-06-18-10:41:24.742.935 [ra_ctx.c:360]tid:68883,RaCtxLmemRegister : [init][ra_lmem]register failed, ret(-259) phyId(1) devIndex(65796)
+/home/h30059441/TileXR/run/plog/2606181041/debug/plog/plog-68883_20260618104124883.log:3:[ERROR] HCCP(68883,tilexr_udma_demo):2026-06-18-10:41:24.744.322 [ra_hdc_ctx.c:538]tid:68883,RaHdcCtxQpUnimport : [deinit][ra_qp]hdc message process failed ret[-259], phyId[1] devIndex[65796]
+/home/h30059441/TileXR/run/plog/2606181041/debug/plog/plog-68883_20260618104124883.log:4:[ERROR] HCCP(68883,tilexr_udma_demo):2026-06-18-10:41:24.744.349 [ra_ctx.c:802]tid:68883,RaCtxQpUnimport : [deinit][ra_qp]unimport failed, ret(-259) phyId(1) devIndex(65796) qp_id(9496)
+/home/h30059441/TileXR/run/plog/2606181041/debug/plog/plog-69048_20260618104138708.log:1:[ERROR] HCCP(69048,tilexr_udma_demo):2026-06-18-10:41:38.535.520 [ra_hdc_ctx.c:276]tid:69048,RaHdcCtxLmemRegister : [init][ra_hdc_lmem]hdc message process failed ret[-259], phyId[0] devIndex[65796]
+/home/h30059441/TileXR/run/plog/2606181041/debug/plog/plog-69048_20260618104138708.log:2:[ERROR] HCCP(69048,tilexr_udma_demo):2026-06-18-10:41:38.535.533 [ra_ctx.c:360]tid:69048,RaCtxLmemRegister : [init][ra_lmem]register failed, ret(-259) phyId(0) devIndex(65796)
+/home/h30059441/TileXR/run/plog/2606181041/debug/plog/plog-69048_20260618104138708.log:3:[ERROR] HCCP(69048,tilexr_udma_demo):2026-06-18-10:41:38.542.079 [ra_hdc_ctx.c:538]tid:69048,RaHdcCtxQpUnimport : [deinit][ra_qp]hdc message process failed ret[-259], phyId[0] devIndex[65796]
+/home/h30059441/TileXR/run/plog/2606181041/debug/plog/plog-69048_20260618104138708.log:4:[ERROR] HCCP(69048,tilexr_udma_demo):2026-06-18-10:41:38.542.091 [ra_ctx.c:802]tid:69048,RaCtxQpUnimport : [deinit][ra_qp]unimport failed, ret(-259) phyId(0) devIndex(65796) qp_id(9497)
+/home/h30059441/TileXR/run/plog/2606181041/debug/plog/plog-69049_20260618104138709.log:1:[ERROR] HCCP(69049,tilexr_udma_demo):2026-06-18-10:41:38.535.282 [ra_hdc_ctx.c:276]tid:69049,RaHdcCtxLmemRegister : [init][ra_hdc_lmem]hdc message process failed ret[-259], phyId[1] devIndex[65796]
+/home/h30059441/TileXR/run/plog/2606181041/debug/plog/plog-69049_20260618104138709.log:2:[ERROR] HCCP(69049,tilexr_udma_demo):2026-06-18-10:41:38.535.296 [ra_ctx.c:360]tid:69049,RaCtxLmemRegister : [init][ra_lmem]register failed, ret(-259) phyId(1) devIndex(65796)
+/home/h30059441/TileXR/run/plog/2606181041/debug/plog/plog-69049_20260618104138709.log:3:[ERROR] HCCP(69049,tilexr_udma_demo):2026-06-18-10:41:38.536.436 [ra_hdc_ctx.c:538]tid:69049,RaHdcCtxQpUnimport : [deinit][ra_qp]hdc message process failed ret[-259], phyId[1] devIndex[65796]
+/home/h30059441/TileXR/run/plog/2606181041/debug/plog/plog-69049_20260618104138709.log:4:[ERROR] HCCP(69049,tilexr_udma_demo):2026-06-18-10:41:38.536.448 [ra_ctx.c:802]tid:69049,RaCtxQpUnimport : [deinit][ra_qp]unimport failed, ret(-259) phyId(1) devIndex(65796) qp_id(9497)
+/home/h30059441/TileXR/run/plog/2606181041/debug/plog/plog-68882_20260618104124882.log:1:[ERROR] HCCP(68882,tilexr_udma_demo):2026-06-18-10:41:24.742.923 [ra_hdc_ctx.c:276]tid:68882,RaHdcCtxLmemRegister : [init][ra_hdc_lmem]hdc message process failed ret[-259], phyId[0] devIndex[65796]
+/home/h30059441/TileXR/run/plog/2606181041/debug/plog/plog-68882_20260618104124882.log:2:[ERROR] HCCP(68882,tilexr_udma_demo):2026-06-18-10:41:24.742.952 [ra_ctx.c:360]tid:68882,RaCtxLmemRegister : [init][ra_lmem]register failed, ret(-259) phyId(0) devIndex(65796)
+/home/h30059441/TileXR/run/plog/2606181041/debug/plog/plog-68882_20260618104124882.log:3:[ERROR] HCCP(68882,tilexr_udma_demo):2026-06-18-10:41:24.744.397 [ra_hdc_ctx.c:538]tid:68882,RaHdcCtxQpUnimport : [deinit][ra_qp]hdc message process failed ret[-259], phyId[0] devIndex[65796]
+/home/h30059441/TileXR/run/plog/2606181041/debug/plog/plog-68882_20260618104124882.log:4:[ERROR] HCCP(68882,tilexr_udma_demo):2026-06-18-10:41:24.744.425 [ra_ctx.c:802]tid:68882,RaCtxQpUnimport : [deinit][ra_qp]unimport failed, ret(-259) phyId(0) devIndex(65796) qp_id(9496)

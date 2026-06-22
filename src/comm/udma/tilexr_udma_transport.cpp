@@ -863,6 +863,11 @@ int TileXRUDMATransport::RegisterMemoryOnContexts(GM_ADDR localPtr, size_t bytes
         void* lmemHandle = nullptr;
         int ret = loader_.RaCtxLmemRegister(ctxEntry.second, &mrInfo, &lmemHandle);
         if (ret != 0 || lmemHandle == nullptr) {
+            TILEXR_LOG(ERROR) << "RaCtxLmemRegister failed, ret=" << ret
+                              << " eid=" << eidIndex
+                              << " addr=" << reinterpret_cast<void*>(localPtr)
+                              << " bytes=" << bytes
+                              << " lmemHandle=" << lmemHandle;
             return TILEXR_ERROR_INTERNAL;
         }
 
